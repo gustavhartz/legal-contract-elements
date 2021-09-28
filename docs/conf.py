@@ -166,7 +166,6 @@ html_static_path = ['_static']
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'legal-contract-elementsdoc'
 
-
 # -- Options for LaTeX output --------------------------------------------------
 
 latex_elements = {
@@ -231,7 +230,8 @@ man_pages = [
 texinfo_documents = [
     ('index', 'legal-contract-elements', u'legal-contract-elements Documentation',
      u"Gustav Hartz", 'legal-contract-elements',
-     'Student project focused on extracting and processing legal contract elements using deeplearning methods', 'Miscellaneous'),
+     'Student project focused on extracting and processing legal contract elements using deeplearning methods',
+     'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.

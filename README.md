@@ -1,7 +1,19 @@
-f
+Legal contract elements
 ==============================
+*This project is part of a 10 ects advanced project course.*
 
-d
+The goal of the project is to investigate state of the art algorithms for processing legal contracts in PDF format and extract the key meta features such as
+Document Name, Contract Parties, Agreement Date, Effective Date, and Expiration Date
+
+The project will test a vareity of of models such as 
+* BERT
+* RoBERTa
+* DrQA
+* Stanford Attentive Reader
+
+### Data
+The data source for the main task of contract element prediction is the [CUAD](https://www.atticusprojectai.org/cuad) Commercial Contracts dataset - A corpus of 13,000+ labels in 510 commercial legal contracts with rich expert annotations, by [The Atticus Project](https://www.atticusprojectai.org/). Furthermore, the [SQuAD](https://arxiv.org/abs/1606.05250) dataset will also play a large role in training the models.
+
 
 Project Organization
 ------------
