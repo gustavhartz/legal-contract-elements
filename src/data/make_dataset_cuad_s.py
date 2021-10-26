@@ -20,8 +20,8 @@ from subprocess import run
 from zipfile import ZipFile
 
 import numpy as np
-from args_squad import get_setup_args
-from helpers_squad import data_frame_from_squad
+from args_cuad import get_setup_args
+from helpers_cuad import data_frame_from_cuda
 from tqdm import tqdm
 
 from src.utils.log import get_logger
@@ -43,19 +43,18 @@ def main():
 
     Process them
     """
-    data_frame_from_squad(f_loc.get("SQUAD train-v2.0"), f_loc.get("SQUAD dev-v2.0"))
+    data_frame_from_cuda(f_loc.get("CUDA V1") + "/CUAD_v1/CUAD_v1.json")
 
 
 def download(args):
     downloads = [
         # All the data elements we wish to download
         ('GloVe word vectors', args.glove_url),
-        ('SQUAD train-v2.0', args.train_url),
-        ('SQUAD dev-v2.0', args.dev_url)
+        ('CUDA V1', args.data_url)
     ]
     file_locations = {}
     for name, url in downloads:
-        output_path = str(Path(__file__).resolve().parents[2]) + "/data/raw/" + url.split("/")[-1]
+        output_path = str(Path(__file__).resolve().parents[2]) + "/data/raw/" + url.split("/")[-1].split("?")[0]
         file_locations[name] = output_path
         if not os.path.exists(output_path):
             print(f'Downloading {name}...')
@@ -67,6 +66,7 @@ def download(args):
                 print(f'Unzipping {name}...')
                 with ZipFile(output_path, 'r') as zip_fh:
                     zip_fh.extractall(extracted_path)
+            file_locations[name] = extracted_path
 
     print('Downloading spacy language model...')
     run(['python', '-m', 'spacy', 'download', 'en_core_web_sm'])
@@ -94,4 +94,5 @@ def download_url(url, output_path, show_progress=True):
 
 if __name__ == '__main__':
     # not used in this stub but often useful for finding various files
+    project_dir = Path(__file__).resolve().parents[2]
     main()

@@ -28,6 +28,7 @@ logger = logging.getLogger(__name__)
 logger_spacy = logging.getLogger("spacy")
 logger_spacy.setLevel(logging.ERROR)
 warnings.filterwarnings("ignore", message=r"\[W108\]", category=UserWarning)
+nlp = spacy.load('en_core_web_sm')
 
 
 def load_json(path):
@@ -255,6 +256,10 @@ def test_indices(df, idx2word):
         context_span = [(word.idx, word.idx + len(word.text))
                         for word in nlp(row['context'], disable=['parser', 'tagger', 'ner'])]
 
+        if not context_span:
+            assert_error.append(index)
+            continue
+
         starts, ends = zip(*context_span)
 
         answer_start, answer_end = row['label']
@@ -328,7 +333,7 @@ def __prepare_data_frame_from_squad(file_path):
     return df
 
 
-def __add_word_embedding(df, word2idx, idx2word):
+def add_word_embedding(df, word2idx, idx2word):
     df['context_ids'] = df.context.apply(context_to_ids, word2idx=word2idx)
     df['question_ids'] = df.question.apply(question_to_ids, word2idx=word2idx)
     err = get_error_indices(df, idx2word)
@@ -356,14 +361,17 @@ def data_frame_from_squad(train_path: str, valid_path: str, save_files=True):
     print("Building vocab")
     word2idx, idx2word, word_vocab = build_word_vocab(vocab_text)
     print("numericalize context and questions for training and validation set. Expected processing time 5 minutes")
-    train_df = __add_word_embedding(train_df, word2idx, idx2word)
+
+    train_df = add_word_embedding(train_df, word2idx, idx2word)
+    root_path = str(Path(__file__).resolve().parents[2]) + "/data/processed/squad_drqa/"
+    train_df.to_pickle(root_path + "draq_train.pkl")
     del train_df
     print("Train done")
-    valid_df = __add_word_embedding(valid_df, word2idx, idx2word)
+    valid_df = add_word_embedding(valid_df, word2idx, idx2word)
+    valid_df.to_pickle(root_path + "draq_valid.pkl")
     print("Valid done")
     print("Saving files")
     if save_files:
-        root_path = Path(__file__).resolve().parents[2] + "/data/processed/squad_drqa/"
         with open(root_path + 'drqa_word2idx.pickle', 'wb+') as handle:
             pickle.dump(word2idx, handle)
         with open(root_path + 'drqa_idx2word.pickle', 'wb+') as handle:
