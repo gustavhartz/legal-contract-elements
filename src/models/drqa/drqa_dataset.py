@@ -51,7 +51,7 @@ class DRQADataset(Dataset):
         context_mask = torch.eq(padded_context, 1)
         question_mask = torch.eq(padded_question, 1)
 
-        ids = list(batch.id)  
+        ids = batch.id[0]  
         return (padded_context, padded_question, context_mask, 
                 question_mask, label, context_text, answer_text, ids)
 

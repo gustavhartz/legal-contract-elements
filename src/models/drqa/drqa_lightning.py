@@ -1,8 +1,9 @@
+from collections import ChainMap
+
 import pytorch_lightning as pl
 import torch
 import torch.nn.functional as F
 from torch import nn
-from collections import ChainMap
 
 
 class drqaLightning(pl.LightningModule):
@@ -25,9 +26,9 @@ class drqaLightning(pl.LightningModule):
 
         # place the tensors on GPU
         if self.device:
-            context, question, context_mask, question_mask, label, ctx, ans, ids = context.to(self.device), question.to(
-                self.device), context_mask.to(self.device), question_mask.to(self.device), label.to(self.device), ctx, ans, ids
-        preds = self.model(context, question, context_mask, question_mask)
+            context, question, context_mask, question_mask, label, ctx, ans, ids = context.to(self.device), 
+            question.to(self.device), context_mask.to(self.device), question_mask.to(self.device), 
+            label.to(self.device), ctx, ans, ids, preds = self.model(context, question, context_mask, question_mask)
 
         # forward pass, get the predictions
         start_pred, end_pred = preds
@@ -44,8 +45,9 @@ class drqaLightning(pl.LightningModule):
         context, question, context_mask, question_mask, label, ctx, ans, ids = batch
 
         if self.device:
-            context, question, context_mask, question_mask, label, ctx, ans, ids = context.to(self.device), question.to(
-                self.device), context_mask.to(self.device), question_mask.to(self.device), label.to(self.device), ctx, ans, ids
+            context, question, context_mask, question_mask, label, ctx, ans, ids = context.to(self.device), 
+            question.to(self.device), context_mask.to(self.device), question_mask.to(self.device), 
+            label.to(self.device), ctx, ans, ids
         # place the tensors on GPU
 
         preds = self.model(context, question, context_mask, question_mask)

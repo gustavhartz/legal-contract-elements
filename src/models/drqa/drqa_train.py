@@ -1,14 +1,16 @@
+import json
 import os
+import re
+import string
+from collections import Counter
+
 import pytorch_lightning as pl
 import torch
 from pytorch_lightning.loggers import WandbLogger
 
-from src.models.drqa.drqa_dataset import DRQADataset
 from src.models.drqa.drqa import DocumentReader
+from src.models.drqa.drqa_dataset import DRQADataset
 from src.models.drqa.drqa_lightning import drqaLightning
-from collections import Counter
-import json
-import string
 
 
 def train() -> None:
@@ -62,7 +64,8 @@ def train() -> None:
                            "./data/processed/squad_drqa/drqaglove_vt.npy").to(device)
 
     litmodel = drqaLightning(model, idx2word=idx2word, device=device, evaluate_func=evaluate_func, optimizer_lr=0.002)
-    trainer = pl.Trainer(max_epochs=15, gpus=1)
+    wandb_logger = WandbLogger(project="legal-contract-analysis")
+    trainer = pl.Trainer(max_epochs=15, gpus=1, logger=wandb_logger, gradient_clip_val=10)
 
     trainer.fit(litmodel, trainloader, validloader)
 
@@ -189,6 +192,5 @@ def epoch_time(start_time, end_time):
 
 
 if __name__ == "__main__":
-    import os
     print(os.getcwd())
     train()

@@ -188,7 +188,7 @@ class DocumentReader(nn.Module):
 
         self.device_ = device
 
-        #self.embedding = self.get_glove_embedding()
+        # self.embedding = self.get_glove_embedding()
 
         self.context_bilstm = StackedBiLSTM(embedding_dim * 2, hidden_dim, num_layers, dropout)
 
