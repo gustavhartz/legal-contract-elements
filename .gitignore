@@ -133,4 +133,9 @@ dmypy.json
 .DS_Store
 
 data/raw/*
-data/processed/*
+data/processed/squad_drqa/*
+data/processed/cuad_drqa/*
+
+.vscode
+
+lightning_logs/
