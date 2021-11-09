@@ -140,7 +140,7 @@ def build_word_vocab(vocab_text):
     '''
 
     words = []
-    for sent in vocab_text:
+    for sent in tqdm(vocab_text):
         for word in nlp(sent, disable=['parser', 'tagger', 'ner']):
             words.append(word.text)
 

@@ -14,10 +14,10 @@ def get_setup_args():
 
     parser.add_argument('--train_url',
                         type=str,
-                        default='https://rajpurkar.github.io/SQuAD-explorer/dataset/train-v2.0.json')
+                        default='https://rajpurkar.github.io/SQuAD-explorer/dataset/train-v1.1.json')
     parser.add_argument('--dev_url',
                         type=str,
-                        default='https://rajpurkar.github.io/SQuAD-explorer/dataset/dev-v2.0.json')
+                        default='https://rajpurkar.github.io/SQuAD-explorer/dataset/dev-v1.1.json')
     parser.add_argument('--glove_url',
                         type=str,
                         default='http://nlp.stanford.edu/data/glove.840B.300d.zip')

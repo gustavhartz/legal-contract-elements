@@ -43,15 +43,15 @@ def main():
 
     Process them
     """
-    data_frame_from_squad(f_loc.get("SQUAD train-v2.0"), f_loc.get("SQUAD dev-v2.0"))
+    data_frame_from_squad(f_loc.get("SQUAD train-v1.1"), f_loc.get("SQUAD dev-v1.1"))
 
 
 def download(args):
     downloads = [
         # All the data elements we wish to download
         ('GloVe word vectors', args.glove_url),
-        ('SQUAD train-v2.0', args.train_url),
-        ('SQUAD dev-v2.0', args.dev_url)
+        ('SQUAD train-v1.1', args.train_url),
+        ('SQUAD dev-v1.1', args.dev_url)
     ]
     file_locations = {}
     for name, url in downloads:
