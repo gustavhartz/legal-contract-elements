@@ -13,7 +13,7 @@ from src.models.drqa.drqa_dataset import DRQADataset
 from src.models.drqa.drqa_lightning import drqaLightning
 
 
-def train() -> None:
+def train():
 
     torch.manual_seed(10)
 
@@ -21,27 +21,26 @@ def train() -> None:
     g = torch.Generator()
     g.manual_seed(10)
 
-    print(os.getcwd())
+    print("CWD: ", os.getcwd())
 
     train_set = DRQADataset(
-        "./data/processed/squad_drqa/drqa_train.pkl"
+        "./data/processed/squad_drqa/draq_train.pkl"
     )
     val_set = DRQADataset(
-        "./data/processed/squad_drqa/drqa_valid.pkl"
+        "./data/processed/squad_drqa/draq_valid.pkl"
     )
-
+    # Reduce size for testing
+    
     trainloader = torch.utils.data.DataLoader(
         train_set,
         batch_size=32,
         shuffle=False,
-        generator=g,
-        num_workers=2
     )
 
     validloader = torch.utils.data.DataLoader(
         val_set,
         batch_size=32,
-        num_workers=2
+        num_workers=6
     )
     with open("./data/processed/squad_drqa/drqa_idx2word.pickle", 'rb') as file:
         import pickle
@@ -65,12 +64,12 @@ def train() -> None:
 
     litmodel = drqaLightning(model, idx2word=idx2word, device=device, evaluate_func=evaluate_func, optimizer_lr=0.002)
     wandb_logger = WandbLogger(project="legal-contract-analysis")
-    trainer = pl.Trainer(max_epochs=15, gpus=1, logger=wandb_logger, gradient_clip_val=10)
+    trainer = pl.Trainer(max_epochs=5, gpus=1, logger=wandb_logger, gradient_clip_val=10, profiler="simple")
 
     trainer.fit(litmodel, trainloader, validloader)
 
 
-def evaluate(predictions):
+def evaluate(predictions, **kwargs):
     '''
     Gets a dictionary of predictions with question_id as key
     and prediction as value. The validation dataset has multiple 
@@ -88,7 +87,9 @@ def evaluate(predictions):
       match exactly, 0 otherwise.
     : f1_score: 
     '''
-    with open('./data/raw/dev-v2.0.json', 'r', encoding='utf-8') as f:
+
+    # TODO: Change to correct directory
+    with open('./data/raw/dev-v1.1.json', 'r', encoding='utf-8') as f:
         dataset = json.load(f)
 
     dataset = dataset['data']
@@ -110,6 +111,40 @@ def evaluate(predictions):
                 f1 += metric_max_over_ground_truths(
                     f1_score, prediction, ground_truths)
 
+    exact_match = 100.0 * exact_match / total
+    f1 = 100.0 * f1 / total
+
+    return exact_match, f1
+
+
+def evaluate_single(predictions, answers, **kwargs):
+    '''
+    Gets a dictionary of predictions with question_id as key
+    and prediction as value. The validation dataset has multiple 
+    answers for a single question. Hence we compare our prediction
+    with all the answers and choose the one that gives us
+    the maximum metric (em or f1). 
+    This method first parses the JSON file, gets all the answers
+    for a given id and then passes the list of answers and the 
+    predictions to calculate em, f1.
+
+
+    :param dict predictions
+    Returns
+    : exact_match: 1 if the prediction and ground truth 
+      match exactly, 0 otherwise.
+    : f1_score: 
+    '''
+    assert len(predictions) == len(answers)
+    f1 = exact_match = total = 0
+    for key, value in predictions.items():
+        prediction = value
+        ground_truths = [answers[key]]
+
+        exact_match += metric_max_over_ground_truths(exact_match_score, prediction, ground_truths)
+        f1 += metric_max_over_ground_truths(f1_score, prediction, ground_truths)
+
+    total = len(predictions)
     exact_match = 100.0 * exact_match / total
     f1 = 100.0 * f1 / total
 
@@ -192,5 +227,4 @@ def epoch_time(start_time, end_time):
 
 
 if __name__ == "__main__":
-    print(os.getcwd())
     train()

@@ -62,7 +62,10 @@ if __name__ == "__main__":
     g.manual_seed(10)
     import os
     print(os.getcwd())
-    train_dataset = DRQADataset('./data/processed/squad_drqa/drqa_train.pkl')
+    train_dataset = DRQADataset("./data/processed/squad_drqa/draq_train.pkl")
+    print(len(train_dataset))
+    train_dataset.frame=train_dataset.frame[0:10]
+    print(len(train_dataset))
     trainloader = torch.utils.data.DataLoader(
         train_dataset,
         batch_size=10,
