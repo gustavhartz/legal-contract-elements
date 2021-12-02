@@ -139,3 +139,5 @@ data/processed/cuad_drqa/*
 .vscode
 
 lightning_logs/
+
+wandb/
