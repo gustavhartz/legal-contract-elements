@@ -64,7 +64,7 @@ if __name__ == "__main__":
     print(os.getcwd())
     train_dataset = DRQADataset("./data/processed/squad_drqa/draq_train.pkl")
     print(len(train_dataset))
-    train_dataset.frame=train_dataset.frame[0:10]
+    train_dataset.frame = train_dataset.frame[0:10]
     print(len(train_dataset))
     trainloader = torch.utils.data.DataLoader(
         train_dataset,

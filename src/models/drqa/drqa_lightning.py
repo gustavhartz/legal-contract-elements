@@ -26,7 +26,7 @@ class drqaLightning(pl.LightningModule):
         context, question, context_mask, question_mask, label, ctx, ans, ids = batch
 
         # place the tensors on GPU if not already there
-        if self.device and !context.is_cuda:
+        if self.device and not context.is_cuda:
             context = context.to(self.device) 
             question = question.to(self.device) 
             context_mask = context_mask.to(self.device)
@@ -43,13 +43,12 @@ class drqaLightning(pl.LightningModule):
 
         self.log('loss', loss.item(), on_step=True, on_epoch=True)
 
-
         return loss
 
     def validation_step(self, batch, batch_idx):
         context, question, context_mask, question_mask, label, ctx, ans, ids = batch
 
-        if self.device and !context.is_cuda:
+        if self.device and not context.is_cuda:
             context = context.to(self.device) 
             question = question.to(self.device) 
             context_mask = context_mask.to(self.device)
@@ -87,7 +86,7 @@ class drqaLightning(pl.LightningModule):
         s_idx = torch.gather(s_idx, 1, e_idx.view(-1, 1)).squeeze()
 
         # unpack ans
-        ans=ans[0]
+        ans = ans[0]
         # stack predictions
 
         for i in range(batch_size):
@@ -101,8 +100,7 @@ class drqaLightning(pl.LightningModule):
 
     def training_epoch_end(self, training_step_outputs):
         loss = [x['loss'].item() for x in training_step_outputs]
-        self.log('avg_epoch_loss', sum(loss)/len(loss))
-        
+        self.log('avg_epoch_loss', sum(loss) / len(loss))
 
     def validation_epoch_end(self, validation_step_outputs):
         # Unpack dicts

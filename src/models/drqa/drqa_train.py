@@ -30,7 +30,7 @@ def train():
         "./data/processed/squad_drqa/draq_valid.pkl"
     )
     # Reduce size for testing
-    
+
     trainloader = torch.utils.data.DataLoader(
         train_set,
         batch_size=32,
