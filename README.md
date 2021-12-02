@@ -1,15 +1,35 @@
-Legal contract elements
+# Legal contract elements
 ==============================
-*This project is part of a 10 ects advanced project course.*
+![alt text](reports/figures/Legalcontrac.png "Title")
 
-The goal of the project is to investigate state of the art algorithms for processing legal contracts in PDF format and extract the key meta features such as
-Document Name, Contract Parties, Agreement Date, Effective Date, and Expiration Date
+*This project is part of a 10 ects advanced project course at the Technical University of Denmark*
+
+
+The objective of this paper is to present deep learning
+models for extracting context meta-features from legal doc-
+uments, with the perspective of investigating the feasibility
+of implementing the aforementioned intelligent contract man-
+agement/searching systems based on the presented models. An outline of the full system can be seen in the figure above. What this
+paper asses is the blue square - the deep learning models that
+powers it. The context meta-features investigated are a subset
+of the contract elements that occurs most frequent in the used
+dataset. This is Document Title, Document Type, Agreement-
+, Renewal-, Expiration-, and Effective Dates. This project is
+limited to these parts to reduce the scope. Furthermore, these
+elements can in most cases be found on first page of the doc-
+ument or narrowed down to being on a specific page using
+regex. This drastically reduces the text spans to investi-
+gate from full contracts to smaller text sections, which is an
+assumption used in section
 
 The project will test a vareity of of models such as 
-* BERT
-* RoBERTa
-* DrQA
-* Stanford Attentive Reader
+* BiDAF
+* DrQA / Stanford Attentive Reader
+* GPT-3
+* RoBERTa from the original authors of the CUAD project
+
+
+## [Link to paper](mailto:s174315@student.dtu.dk?subject=ContractPaperRequest)
 
 ### Data
 The data source for the main task of contract element prediction is the [CUAD](https://www.atticusprojectai.org/cuad) Commercial Contracts dataset - A corpus of 13,000+ labels in 510 commercial legal contracts with rich expert annotations, by [The Atticus Project](https://www.atticusprojectai.org/). Furthermore, the [SQuAD](https://arxiv.org/abs/1606.05250) dataset will also play a large role in training the models.
@@ -66,4 +86,45 @@ Project Organization
 
 --------
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+## How to run it
+
+The core models **DrQA** and **BiDAF** can be found in the src/models. The **DrQA** requires the repo to be installed, but the **BiDAF** can be run as is.
+
+```
+# Create and activate a conda enviroment. Tested with Python 3.9.7
+pip install -r requirements.txt
+
+# Setup Weights and Biases
+wandb login
+
+# Install repo
+pip install .
+
+# Create the datasets
+python3 src/data/make_dataset_cuad_s.py
+python3 src/data/make_dataset_squad_s.py
+
+# Run training
+python3 src/models/bidaf/bidaf_train.py
+```
+
+
+
+
+
+### Online interaction with the models
+--------
+Coming soon :)
+
+
+### References for the project
+--------
+Please see references/refs.bib
+
+
+### TODO:
+
+- [ ] Fix redundancy between modules in BiDAF
+- [ ] Remove need for pip installing package to use DrQA
+- [ ] Setup streamlit app like [this one](https://github.com/marshmellow77/cuad-demo/blob/main/scripts/streamlit_app.py) for inference
+
