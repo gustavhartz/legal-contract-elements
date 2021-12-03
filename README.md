@@ -29,7 +29,7 @@ The project will test a vareity of of models such as
 - GPT-3
 - RoBERTa from the original authors of the CUAD project
 
-## [Link to paper](mailto:s174315@student.dtu.dk?subject=ContractPaperRequest)
+## [Link to paper](./reports/Advanced_Project__Document_Parsing_final.pdf)
 
 ### Data
 
