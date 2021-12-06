@@ -92,8 +92,8 @@ wandb login
 pip install .
 
 # Create the datasets
-python3 src/data/make_dataset_cuad_s.py
-python3 src/data/make_dataset_squad_s.py
+python3 src/data/make_dataset_cuad.py
+python3 src/data/make_dataset_squad.py
 
 # Run training
 python3 src/models/bidaf/bidaf_train.py
