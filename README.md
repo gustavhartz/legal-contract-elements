@@ -95,8 +95,13 @@ pip install .
 python3 src/data/make_dataset_cuad.py
 python3 src/data/make_dataset_squad.py
 
+# If you want to use the BiDAF model
+# Unzip ./data/processed/squad_bidaf and replace the empty folder using the same name
+
 # Run training
 python3 src/models/bidaf/bidaf_train.py
+# or - cd into dir
+python3 ./bidaf_train.py
 ```
 
 ### Online interaction with the models
@@ -122,3 +127,5 @@ The models have fairly little training (15 epoch) which can be obtained in 4-5 h
 - [ ] Fix redundancy between modules in BiDAF
 - [ ] Remove need for pip installing package to use DrQA
 - [ ] Setup streamlit app like [this one](https://github.com/marshmellow77/cuad-demo/blob/main/scripts/streamlit_app.py) for inference
+- [ ] Setup general training format for where model and dataset can be selected. Currently, manual setup to work with CUAD
+- [ ] Add BIDAF data creation scripts (currently created in notebook) - 90% same as DrQA. Currently provided as zipfile that should be unzipped :)

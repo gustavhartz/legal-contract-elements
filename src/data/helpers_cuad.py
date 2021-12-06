@@ -19,11 +19,12 @@ import re
 import warnings
 from collections import Counter
 from pathlib import Path
+import numpy as np
 
 import pandas as pd
 import spacy
 from helpers_squad import (add_word_embedding, build_word_vocab,
-                           gather_text_for_vocab)
+                           gather_text_for_vocab, create_glove_matrix, create_word_embedding)
 from tqdm import tqdm
 
 print("sf")
@@ -107,3 +108,9 @@ def data_frame_from_cuda(path: str, save_files=True, filter_questions=True):
             pickle.dump(idx2word, handle)
         with open(root_path + 'drqa_word_vocab.pickle', 'wb+') as handle:
             pickle.dump(word_vocab, handle)
+    print("Creating glove dictionary")
+    glove_dict = create_glove_matrix()
+    weights_matrix, words_found = create_word_embedding(glove_dict, word_vocab=word_vocab)
+    print("Total words found in glove vocab: ", words_found)
+    np.save('./data/processed/cuad_drqa/drqaglove_vt.npy', weights_matrix)
+    print("Done")

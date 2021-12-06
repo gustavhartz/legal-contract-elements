@@ -19,6 +19,7 @@ import re
 import warnings
 from collections import Counter
 from pathlib import Path
+import np
 
 import pandas as pd
 import spacy
@@ -343,6 +344,41 @@ def add_word_embedding(df, word2idx, idx2word):
     return df
 
 
+def create_glove_matrix():
+    '''
+    Parses the glove word vectors text file and returns a dictionary with the words as
+    keys and their respective pretrained word vectors as values.
+
+    '''
+    glove_dict = {}
+    with open("./data/raw/glove.840B.300d/glove.840B.300d.txt", "r", encoding="utf-8") as f:
+        for line in tqdm(f):
+            values = line.split(' ')
+            word = values[0]
+            vector = np.asarray(values[1:], dtype="float32")
+            glove_dict[word] = vector
+
+    f.close()
+
+    return glove_dict
+
+
+def create_word_embedding(glove_dict, word_vocab):
+    '''
+    Creates a weight matrix of the words that are common in the GloVe vocab and
+    the dataset's vocab. Initializes OOV words with a zero vector.
+    '''
+    weights_matrix = np.zeros((len(word_vocab), 300))
+    words_found = 0
+    for i, word in enumerate(word_vocab):
+        try:
+            weights_matrix[i] = glove_dict[word]
+            words_found += 1
+        except Exception as e:
+            pass
+    return weights_matrix, words_found
+
+
 def data_frame_from_squad(train_path: str, valid_path: str, save_files=True):
     """ Process the raw json files and add the various data embedding features to it
 
@@ -378,3 +414,9 @@ def data_frame_from_squad(train_path: str, valid_path: str, save_files=True):
             pickle.dump(idx2word, handle)
         with open(root_path + 'drqa_word_vocab.pickle', 'wb+') as handle:
             pickle.dump(word_vocab, handle)
+    print("Creating glove dictionary")
+    glove_dict = create_glove_matrix()
+    weights_matrix, words_found = create_word_embedding(glove_dict, word_vocab=word_vocab)
+    print("Total words found in glove vocab: ", words_found)
+    np.save('./data/processed/squad_drqa/drqaglove_vt.npy', weights_matrix)
+    print("Done")

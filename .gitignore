@@ -135,7 +135,13 @@ dmypy.json
 data/raw/*
 data/processed/squad_drqa/*
 data/processed/cuad_drqa/*
+data/processed/squad_bidaf/*
 
+# Keep the directories
+!data/processed/squad_drqa/.gitkeep
+!data/processed/squad_bidaf/.gitkeep
+!data/processed/cuad_drqa/.gitkeep
+!data/processed/cuad_bidaf/.gitkeep
 .vscode
 
 lightning_logs/
